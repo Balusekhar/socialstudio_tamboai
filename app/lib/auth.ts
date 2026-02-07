@@ -1,5 +1,8 @@
-import { account, tablesDB, ID } from "./appwrite";
+import { account, ID, tablesDB, Query } from "./appwrite";
 import { AppwriteException } from "appwrite";
+import { addRow } from "./db";
+
+const USERS_TABLE_ID = process.env.NEXT_PUBLIC_APPWRITE_USERS_TABLE_ID!;
 
 function getErrorMessage(err: unknown): string {
   if (err instanceof AppwriteException) {
@@ -11,22 +14,20 @@ function getErrorMessage(err: unknown): string {
   return "An unexpected error occurred. Please try again.";
 }
 
+export { getErrorMessage };
 
 export async function signup(name: string, email: string, password: string) {
   try {
     const user = await account.create(ID.unique(), email, password, name);
-    // add the user to the database
-    await tablesDB.createRow({
-      databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-      tableId: process.env.NEXT_PUBLIC_APPWRITE_USERS_TABLE_ID!,
-      rowId: ID.unique(),
-      data: {
-        appwriteId: user.$id,
-        email: email,
-        name: name,
-      }
-  });
     await login(email, password);
+
+    // Add the user to the database
+    await addRow(USERS_TABLE_ID, {
+      appwriteId: user.$id,
+      email,
+      name,
+    });
+
     return { success: true, data: user };
   } catch (err: unknown) {
     return { success: false, error: getErrorMessage(err) };
@@ -53,7 +54,11 @@ export async function logout() {
 
 export async function getUser() {
   try {
-    const user = await account.get();
+    const user = await tablesDB.listRows(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_USERS_TABLE_ID!,
+      [Query.equal("appwriteId", (await account.get())?.$id)]
+    );
     return { success: true, data: user };
   } catch {
     return { success: false, data: null };
