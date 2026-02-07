@@ -1,7 +1,14 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Upload, X, FileVideo, Sparkles, Loader2, CheckCircle } from "lucide-react";
+import {
+  Upload,
+  X,
+  FileVideo,
+  Sparkles,
+  Loader2,
+  CheckCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { uploadFile, getFileUrl } from "@/app/lib/storage";
 import { addRow } from "@/app/lib/db";
@@ -77,21 +84,46 @@ export default function CaptionsPage() {
       const srt = await transcribeVideo(selectedFile);
       setSrtContent(srt);
 
-      // Step 2: Upload file to Appwrite storage
+      // Step 2: Upload video file to Appwrite storage
       setStep("Uploading video...");
-      const uploadedFile = await uploadFile(selectedFile, (p) => setProgress(p));
+      const uploadedFile = await uploadFile(selectedFile, (p) =>
+        setProgress(p),
+      );
 
       // Step 3: Build the public video URL
       const videoUrl = getFileUrl(uploadedFile.$id);
+      console.log("videoUrl",videoUrl)
 
       // Step 4: Save row in the videos table
-      setStep("Saving to database...");
-      await addRow(process.env.NEXT_PUBLIC_APPWRITE_VIDEOS_TABLE_ID!, {
+      setStep("Saving video to database...");
+      const videoRow = await addRow(
+        process.env.NEXT_PUBLIC_APPWRITE_VIDEOS_TABLE_ID!,
+        {
+          owner: userResult.data.rows[0].$id,
+          videoUrl,
+          fileName: selectedFile.name,
+        },
+      );
+      console.log("videoRow",videoRow)
+      // Step 5: Upload SRT file to Appwrite storage
+      setStep("Uploading captions...");
+      const srtBlob = new Blob([srt], { type: "text/srt" });
+      const srtFile = new File(
+        [srtBlob],
+        selectedFile.name.replace(/\.[^.]+$/, "") + ".srt",
+        { type: "text/srt" },
+      );
+      const uploadedSrt = await uploadFile(srtFile);
+      console.log("uploadedSrt",uploadedSrt)
+      // Step 6: Save row in the captions table
+      setStep("Saving captions to database...");
+      const captionUrl = getFileUrl(uploadedSrt.$id);
+      const captionRow = await addRow(process.env.NEXT_PUBLIC_APPWRITE_CAPTIONS_TABLE_ID!, {
         owner: userResult.data.rows[0].$id,
-        videoUrl,
-        fileName: selectedFile.name,
+        video: videoRow.$id,
+        captionUrl: String(captionUrl),
       });
-
+      console.log("captionRow",captionRow)
       setSuccess(true);
       setSelectedFile(null);
       if (fileInputRef.current) {
@@ -138,8 +170,7 @@ export default function CaptionsPage() {
       {!selectedFile ? (
         <div
           className="border-2 border-dashed border-border rounded-2xl p-12 flex flex-col items-center justify-center text-center mb-6 hover:border-brand/40 transition-colors cursor-pointer"
-          onClick={() => fileInputRef.current?.click()}
-        >
+          onClick={() => fileInputRef.current?.click()}>
           <div className="w-14 h-14 bg-brand/10 rounded-xl flex items-center justify-center mb-4">
             <Upload className="w-7 h-7 text-brand" />
           </div>
@@ -156,8 +187,7 @@ export default function CaptionsPage() {
             onClick={(e) => {
               e.stopPropagation();
               fileInputRef.current?.click();
-            }}
-          >
+            }}>
             Choose File
           </Button>
         </div>
@@ -179,16 +209,13 @@ export default function CaptionsPage() {
             size="icon"
             className="shrink-0 text-muted-foreground hover:text-foreground"
             onClick={removeFile}
-            disabled={loading}
-          >
+            disabled={loading}>
             <X className="w-4 h-4" />
           </Button>
         </div>
       )}
 
-      {error && (
-        <p className="text-sm text-red-500 mb-4">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
 
       {/* Step & progress indicator */}
       {loading && (
@@ -213,8 +240,7 @@ export default function CaptionsPage() {
       <Button
         className="bg-brand hover:bg-brand/90 text-white gap-2"
         disabled={!selectedFile || loading}
-        onClick={handleGenerate}
-      >
+        onClick={handleGenerate}>
         {loading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -247,8 +273,7 @@ export default function CaptionsPage() {
                 a.download = "captions.srt";
                 a.click();
                 URL.revokeObjectURL(url);
-              }}
-            >
+              }}>
               Download SRT
             </Button>
           </div>
