@@ -1,11 +1,11 @@
 import React from "react";
+import Link from "next/link";
 import {
   Sparkles,
   Image,
   Type,
   Maximize,
   SendHorizonal,
-  Cpu,
 } from "lucide-react";
 
 const tools = [
@@ -43,14 +43,14 @@ const tools = [
 
 const ToolsSection: React.FC = () => {
   return (
-    <section className="bg-white py-24 border-t border-gray-50">
+    <section className="bg-background py-24 border-t border-border">
       <div className="max-w-[1440px] mx-auto px-10">
         <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="max-w-2xl">
-            <h2 className="text-[42px] font-medium tracking-tight leading-[1.1] mb-4 text-black">
-              The creator's powerhouse.
+            <h2 className="text-[42px] font-medium tracking-tight leading-[1.1] mb-4 text-foreground">
+              The creator&apos;s powerhouse.
             </h2>
-            <p className="text-gray-500 text-lg">
+            <p className="text-muted-foreground text-lg">
               Advanced generative tools to scale your presence across every
               social channel.
             </p>
@@ -61,27 +61,29 @@ const ToolsSection: React.FC = () => {
           {tools.map((tool, idx) => (
             <div
               key={idx}
-              className="p-10 rounded-[40px] bg-[#F8F8F8] border border-gray-100 flex flex-col items-start transition-all hover:border-brand/20 group">
-              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-gray-50 mb-8 group-hover:scale-110 transition-transform">
+              className="p-10 rounded-[40px] bg-card border border-border flex flex-col items-start transition-all hover:border-brand/20 group">
+              <div className="w-14 h-14 bg-background rounded-2xl flex items-center justify-center shadow-sm border border-border mb-8 group-hover:scale-110 transition-transform">
                 <tool.icon className="w-7 h-7 text-brand" />
               </div>
-              <h3 className="text-[24px] font-bold text-black mb-4 tracking-tight">
+              <h3 className="text-[24px] font-bold text-foreground mb-4 tracking-tight">
                 {tool.title}
               </h3>
-              <p className="text-gray-500 leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed">
                 {tool.description}
               </p>
             </div>
           ))}
           {/* Decorative CTA Box */}
-          <div className="p-10 rounded-[40px] bg-black text-white flex flex-col items-center justify-center text-center space-y-6 group">
+          <div className="p-10 rounded-[40px] bg-primary text-primary-foreground flex flex-col items-center justify-center text-center space-y-6 group">
             <h3 className="text-[24px] font-bold tracking-tight">
               Ready to go viral?
             </h3>
-            <button className="bg-brand text-white px-8 py-3 rounded-full font-bold hover:scale-105 transition-all shadow-lg">
+            <Link
+              href="/auth"
+              className="bg-brand text-white px-8 py-3 rounded-full font-bold hover:scale-105 transition-all shadow-lg">
               Launch Studio
-            </button>
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">
+            </Link>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
               Try Now for Free
             </p>
           </div>

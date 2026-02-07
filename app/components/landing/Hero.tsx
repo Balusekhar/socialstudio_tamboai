@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 const Hero: React.FC = () => {
   return (
@@ -11,19 +12,19 @@ const Hero: React.FC = () => {
               href="https://tambo.co/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 bg-[#F5F5F5] border border-gray-200 rounded-full pl-1.5 pr-4 py-1.5 hover:bg-gray-100 transition-colors group">
-              <div className="w-7 h-7 rounded-full overflow-hidden bg-white border border-gray-100 shrink-0">
+              className="inline-flex items-center gap-2.5 bg-muted border border-border rounded-full pl-1.5 pr-4 py-1.5 hover:bg-accent transition-colors group">
+              <div className="w-7 h-7 rounded-full overflow-hidden bg-background border border-border shrink-0">
                 <img
                   src="/tambo.png"
                   alt="Tambo AI"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="text-[13px] font-medium text-gray-600 group-hover:text-gray-900 transition-colors">
+              <span className="text-[13px] font-medium text-muted-foreground group-hover:text-foreground transition-colors">
                 UI powered by <span className="font-semibold text-foreground">Tambo AI</span>
               </span>
               <svg
-                className="w-3.5 h-3.5 text-gray-400 group-hover:translate-x-0.5 transition-transform"
+                className="w-3.5 h-3.5 text-muted-foreground group-hover:translate-x-0.5 transition-transform"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -36,7 +37,7 @@ const Hero: React.FC = () => {
           {/* Headline Section */}
           <div className="mb-10 w-full">
             <h1
-              className="text-[72px] lg:text-[108px] leading-[0.98] tracking-[-0.045em] text-[#000000] font-inter"
+              className="text-[72px] lg:text-[108px] leading-[0.98] tracking-[-0.045em] text-foreground font-inter"
               style={{
                 fontWeight: 400,
                 maxWidth: "1100px",
@@ -58,9 +59,9 @@ const Hero: React.FC = () => {
           {/* Sub-paragraph */}
           <div
             className="mb-10"
-            style={{ width: "600px", minHeight: "50.3984px" }}>
+            style={{ maxWidth: "600px" }}>
             <p
-              className="text-[16px] lg:text-[18px] leading-[1.6] text-[#0F0F0F] font-inter opacity-80"
+              className="text-[16px] lg:text-[18px] leading-[1.6] text-muted-foreground font-inter"
               style={{ fontWeight: 400 }}>
               Your go-to studio for designs that inspire and strategies that
               deliver. Automate your editing, generate captions, and schedule
@@ -70,9 +71,11 @@ const Hero: React.FC = () => {
 
           {/* CTA Section */}
           <div className="flex flex-col items-start gap-6 mb-8">
-            <button className="bg-brand text-white px-10 py-5 rounded-full font-medium text-[17px] hover:scale-[1.02] transition-all shadow-[0_25px_50px_rgba(0,0,0,0.22)]">
+            <Link
+              href="/auth"
+              className="bg-brand text-white px-10 py-5 rounded-full font-medium text-[17px] hover:scale-[1.02] transition-all shadow-[0_25px_50px_rgba(0,0,0,0.22)]">
               Start Creating Free
-            </button>
+            </Link>
           </div>
         </div>
       </div>
