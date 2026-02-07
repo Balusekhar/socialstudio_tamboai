@@ -8,6 +8,8 @@ import { AppSidebar } from "./sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Loader2, LogOut } from "lucide-react";
+import TamboWrapper from "@/app/components/tambo/TamboWrapper";
+import TamboChat from "@/app/components/tambo/TamboChat";
 
 interface User {
   name: string;
@@ -22,13 +24,17 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
+  const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       const result = await getUser();
       if (result.success && result.data) {
         setUser(result.data as User);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setUserId((result.data as any).rows?.[0]?.$id ?? (result.data as any).$id ?? "");
       } else {
         router.push("/auth");
       }
@@ -51,35 +57,56 @@ export default function DashboardLayout({
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar user={user} />
-      <SidebarInset>
-        {/* Top Navbar */}
-        <header className="flex h-14 shrink-0 items-center border-b border-border px-4 gap-2">
-          <SidebarTrigger className="-ml-1" />
+    <TamboWrapper userId={userId}>
+      <SidebarProvider>
+        <AppSidebar user={user} />
+        <SidebarInset>
+          {/* Top Navbar - responsive: wrap on small, touch-friendly */}
+          <header className="flex h-14 min-h-[56px] shrink-0 items-center border-b border-border px-3 sm:px-4 gap-2 flex-wrap sm:flex-nowrap">
+            <SidebarTrigger className="-ml-1 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 flex items-center justify-center sm:justify-start" />
 
-          <div className="ml-auto flex items-center gap-3">
-            <span className="text-sm text-muted-foreground hidden sm:inline">
-              {user?.email}
-            </span>
-            <ThemeToggle />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleLogout}
-              className="gap-2"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </Button>
-          </div>
-        </header>
+            <div className="ml-auto flex items-center gap-2 sm:gap-3 shrink-0">
+              <span className="text-xs sm:text-sm text-muted-foreground hidden md:inline truncate max-w-[120px] lg:max-w-[180px]">
+                {user?.email}
+              </span>
+              <ThemeToggle />
 
-        {/* Page Content */}
-        <main className="flex-1 p-6">
-          {children}
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+              {/* Tambo Chat Toggle */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setChatOpen(true)}
+                className="gap-1.5 sm:gap-2 min-h-[40px] sm:min-h-0 px-2.5 sm:px-3"
+              >
+                <img
+                  src="/tambo.png"
+                  alt="Tambo AI"
+                  className="w-4 h-4 rounded shrink-0"
+                />
+                <span className="hidden sm:inline">AI Chat</span>
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="gap-1.5 sm:gap-2 min-h-[40px] sm:min-h-0 px-2.5 sm:px-3"
+              >
+                <LogOut className="w-4 h-4 shrink-0" />
+                <span className="hidden sm:inline">Logout</span>
+              </Button>
+            </div>
+          </header>
+
+          {/* Page Content - responsive padding */}
+          <main className="flex-1 p-4 sm:p-6 min-w-0 overflow-x-auto">
+            {children}
+          </main>
+        </SidebarInset>
+
+        {/* Tambo Chat Panel */}
+        <TamboChat open={chatOpen} onClose={() => setChatOpen(false)} />
+      </SidebarProvider>
+    </TamboWrapper>
   );
 }

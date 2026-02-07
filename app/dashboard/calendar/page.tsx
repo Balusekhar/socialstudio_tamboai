@@ -39,6 +39,13 @@ interface CalendarEvent {
   note: string;
 }
 
+/** Parse stored date (YYYY-MM-DD or ISO string) as local calendar date so the event shows on the correct day in all timezones. */
+function parseEventDate(dateStr: string): Date {
+  const dateOnly = dateStr.slice(0, 10);
+  const [y, m, d] = dateOnly.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
 export default function CalendarPage() {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -102,7 +109,7 @@ export default function CalendarPage() {
 
   const getEventsForDay = (day: number) =>
     events.filter((e) => {
-      const d = new Date(e.date);
+      const d = parseEventDate(e.date);
       return (
         d.getDate() === day &&
         d.getMonth() === currentMonth &&
@@ -188,23 +195,19 @@ export default function CalendarPage() {
     setSaving(true);
     setError("");
     try {
-      const dateValue = new Date(
-        currentYear,
-        currentMonth,
-        selectedDay,
-      ).toISOString();
+      const dateOnly = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`;
 
       if (editingEvent) {
         await updateRow(CALENDAR_TABLE_ID, editingEvent.$id, {
           title: title.trim(),
           note: note.trim(),
-          date: dateValue,
+          date: dateOnly,
         });
       } else {
         await addRow(CALENDAR_TABLE_ID, {
           title: title.trim(),
           note: note.trim(),
-          date: dateValue,
+          date: dateOnly,
           owner: userId,
         });
       }
@@ -235,7 +238,7 @@ export default function CalendarPage() {
   // ---------- Upcoming events ----------
   const upcomingEvents = events
     .filter((e) => {
-      const d = new Date(e.date);
+      const d = parseEventDate(e.date);
       const todayStart = new Date(
         today.getFullYear(),
         today.getMonth(),
@@ -243,7 +246,7 @@ export default function CalendarPage() {
       );
       return d >= todayStart;
     })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .sort((a, b) => parseEventDate(a.date).getTime() - parseEventDate(b.date).getTime())
     .slice(0, 5);
 
   // ---------- Render ----------
@@ -566,7 +569,7 @@ export default function CalendarPage() {
         ) : (
           <div className="space-y-2">
             {upcomingEvents.map((event) => {
-              const d = new Date(event.date);
+              const d = parseEventDate(event.date);
               return (
                 <div
                   key={event.$id}
