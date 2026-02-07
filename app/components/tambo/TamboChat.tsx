@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTamboThread, useTamboThreadInput } from "@tambo-ai/react";
-import { X, Send, Loader2, MessageSquare, Trash2 } from "lucide-react";
+import { useTamboThread, useTamboThreadInput, useTamboVoice } from "@tambo-ai/react";
+import { X, Send, Loader2, MessageSquare, Trash2, Mic, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface TamboChatProps {
@@ -13,9 +13,19 @@ interface TamboChatProps {
 export default function TamboChat({ open, onClose }: TamboChatProps) {
   const { thread, isIdle, generationStage, startNewThread } = useTamboThread();
   const { value, setValue, submit, isPending } = useTamboThreadInput();
+  const {
+    startRecording,
+    stopRecording,
+    isRecording,
+    isTranscribing,
+    transcript,
+    transcriptionError,
+    mediaAccessError,
+  } = useTamboVoice();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [mounted, setMounted] = useState(false);
+  const consumedTranscriptRef = useRef(false);
 
   useEffect(() => {
     setMounted(true);
@@ -30,6 +40,19 @@ export default function TamboChat({ open, onClose }: TamboChatProps) {
       setTimeout(() => inputRef.current?.focus(), 300);
     }
   }, [open]);
+
+  // When recording starts, mark that we haven't consumed the next transcript yet
+  useEffect(() => {
+    if (isRecording) consumedTranscriptRef.current = false;
+  }, [isRecording]);
+
+  // When transcription finishes, put transcript into the input (once per recording)
+  useEffect(() => {
+    if (!isRecording && !isTranscribing && transcript?.trim() && !consumedTranscriptRef.current) {
+      setValue((prev) => (prev ? prev.trim() + " " + transcript.trim() : transcript.trim()));
+      consumedTranscriptRef.current = true;
+    }
+  }, [isRecording, isTranscribing, transcript, setValue]);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -196,16 +219,42 @@ export default function TamboChat({ open, onClose }: TamboChatProps) {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input - touch-friendly height on mobile */}
+        {/* Input - touch-friendly height on mobile; speech-to-text via mic */}
         <form
           onSubmit={handleSubmit}
           className="shrink-0 border-t border-border px-3 py-3 sm:px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
         >
+          {(mediaAccessError || transcriptionError) && (
+            <p className="text-xs text-red-500 mb-2 px-1">
+              {mediaAccessError || transcriptionError}
+            </p>
+          )}
           <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => (isRecording ? stopRecording() : startRecording())}
+              disabled={isPending}
+              className={`shrink-0 h-11 w-11 sm:h-9 sm:w-9 rounded-xl min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] ${
+                isRecording
+                  ? "bg-red-500/15 text-red-600 hover:bg-red-500/25 border-red-500/30"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              title={isRecording ? "Stop recording" : "Speak (voice input)"}
+            >
+              {isRecording ? (
+                <Square className="w-4 h-4" />
+              ) : isTranscribing ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Mic className="w-4 h-4" />
+              )}
+            </Button>
             <input
               ref={inputRef}
               type="text"
-              placeholder="Ask anything..."
+              placeholder={isRecording ? "Listening..." : isTranscribing ? "Transcribing..." : "Ask anything or tap mic..."}
               value={value}
               onChange={(e) => setValue(e.target.value)}
               disabled={isPending}
