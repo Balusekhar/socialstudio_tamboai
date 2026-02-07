@@ -123,7 +123,7 @@ export function AppSidebar({ user }: { user: User | null }) {
             <div className="w-[5px] h-[5px] bg-brand rounded-full"></div>
           </div>
           <span className="font-bold text-lg tracking-tight text-foreground group-data-[collapsible=icon]:hidden">
-            CreatorForge
+            Social Studio
           </span>
         </Link>
       </SidebarHeader>
@@ -138,8 +138,7 @@ export function AppSidebar({ user }: { user: User | null }) {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
-                      isActive={pathname === item.href}
-                    >
+                      isActive={pathname === item.href}>
                       <Link href={item.href}>
                         <item.icon className="w-4 h-4" />
                         <span>{item.title}</span>

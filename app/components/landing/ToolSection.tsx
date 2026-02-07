@@ -81,7 +81,7 @@ const ToolsSection: React.FC = () => {
             <Link
               href="/auth"
               className="bg-brand text-white px-8 py-3 rounded-full font-bold hover:scale-105 transition-all shadow-lg">
-              Launch Studio
+              Launch Social Studio
             </Link>
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
               Try Now for Free

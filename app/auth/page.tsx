@@ -18,7 +18,6 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { login, signup } from "@/app/lib/auth";
 
-
 interface SignInForm {
   email: string;
   password: string;
@@ -72,7 +71,11 @@ export default function AuthPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const result = await signup(signUpForm.name, signUpForm.email, signUpForm.password);
+    const result = await signup(
+      signUpForm.name,
+      signUpForm.email,
+      signUpForm.password,
+    );
     setLoading(false);
     if (result.success) {
       router.push("/dashboard");
@@ -89,26 +92,26 @@ export default function AuthPage() {
           <div className="w-[6px] h-[6px] bg-brand rounded-full"></div>
         </div>
         <span className="font-bold text-[22px] tracking-tight text-foreground">
-          IG Studio
+          Social Studio
         </span>
       </Link>
 
       <Tabs
         value={activeTab}
-        onValueChange={(v) => { setActiveTab(v); setError(""); }}
-        className="w-full max-w-md"
-      >
+        onValueChange={(v) => {
+          setActiveTab(v);
+          setError("");
+        }}
+        className="w-full max-w-md">
         <TabsList className="grid w-full grid-cols-2 h-12 bg-muted rounded-xl p-1">
           <TabsTrigger
             value="signin"
-            className="rounded-lg text-sm font-semibold data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm text-muted-foreground"
-          >
+            className="rounded-lg text-sm font-semibold data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm text-muted-foreground">
             Sign In
           </TabsTrigger>
           <TabsTrigger
             value="signup"
-            className="rounded-lg text-sm font-semibold data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm text-muted-foreground"
-          >
+            className="rounded-lg text-sm font-semibold data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm text-muted-foreground">
             Sign Up
           </TabsTrigger>
         </TabsList>
@@ -156,17 +159,21 @@ export default function AuthPage() {
                 <Button
                   type="submit"
                   className="w-full bg-brand hover:bg-brand/90 text-white gap-2"
-                  disabled={loading}
-                >
-                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Signing in...</> : "Sign In"}
+                  disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" /> Signing in...
+                    </>
+                  ) : (
+                    "Sign In"
+                  )}
                 </Button>
                 <p className="text-sm text-muted-foreground text-center">
                   Don&apos;t have an account?{" "}
                   <button
                     type="button"
                     className="text-brand font-medium hover:underline"
-                    onClick={() => setActiveTab("signup")}
-                  >
+                    onClick={() => setActiveTab("signup")}>
                     Sign up
                   </button>
                 </p>
@@ -182,7 +189,7 @@ export default function AuthPage() {
               <CardHeader>
                 <CardTitle className="text-2xl">Create an account</CardTitle>
                 <CardDescription>
-                  Get started with IG Studio for free.
+                  Get started with Social Studio for free.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -230,17 +237,22 @@ export default function AuthPage() {
                 <Button
                   type="submit"
                   className="w-full bg-brand hover:bg-brand/90 text-white gap-2"
-                  disabled={loading}
-                >
-                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Creating account...</> : "Create Account"}
+                  disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" /> Creating
+                      account...
+                    </>
+                  ) : (
+                    "Create Account"
+                  )}
                 </Button>
                 <p className="text-sm text-muted-foreground text-center">
                   Already have an account?{" "}
                   <button
                     type="button"
                     className="text-brand font-medium hover:underline"
-                    onClick={() => setActiveTab("signin")}
-                  >
+                    onClick={() => setActiveTab("signin")}>
                     Sign in
                   </button>
                 </p>

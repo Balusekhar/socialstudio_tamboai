@@ -10,19 +10,15 @@ const Footer: React.FC = () => {
               <div className="w-1 h-1 bg-brand rounded-full"></div>
             </div>
             <span className="font-bold text-lg tracking-tight text-foreground">
-              IG Studio
+              Social Studio
             </span>
           </div>
 
           <div className="flex space-x-8 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            <a
-              href="#"
-              className="hover:text-foreground transition-colors">
+            <a href="#" className="hover:text-foreground transition-colors">
               Terms
             </a>
-            <a
-              href="#"
-              className="hover:text-foreground transition-colors">
+            <a href="#" className="hover:text-foreground transition-colors">
               LinkedIn
             </a>
           </div>
@@ -30,7 +26,7 @@ const Footer: React.FC = () => {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-t border-border pt-8">
           <p className="text-muted-foreground text-[13px] font-medium">
-            &copy; {new Date().getFullYear()} IG Studio. All rights reserved.
+            &copy; {new Date().getFullYear()} Social Studio. All rights reserved.
           </p>
 
           <div className="flex items-center gap-2">

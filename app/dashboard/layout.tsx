@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { getUser, logout } from "@/app/lib/auth";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
@@ -9,7 +10,12 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Loader2, LogOut } from "lucide-react";
 import TamboWrapper from "@/app/components/tambo/TamboWrapper";
-import TamboChat from "@/app/components/tambo/TamboChat";
+
+// TamboChat uses useTamboVoice (Web Worker) — load only on client to avoid "Worker is not defined" during SSR
+const TamboChat = dynamic(
+  () => import("@/app/components/tambo/TamboChat").then((m) => m.default),
+  { ssr: false }
+);
 
 interface User {
   name: string;

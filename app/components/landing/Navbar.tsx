@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
           <div className="w-[6px] h-[6px] bg-brand rounded-full"></div>
         </div>
         <span className="font-bold text-[22px] tracking-tight text-foreground">
-          IG Studio
+          Social Studio
         </span>
       </div>
 

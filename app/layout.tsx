@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ReelForge | AI-powered studio for Instagram Reels creators",
+  title: "Social Studio | AI-powered studio for Instagram Reels creators",
   description:
     "Upload one reel, get everything done in one place — subtitles, thumbnails, captions, descriptions, and scheduling. Built for solo creators and small teams.",
 };
@@ -26,8 +26,7 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="system"
           enableSystem
-          disableTransitionOnChange
-        >
+          disableTransitionOnChange>
           {children}
         </ThemeProvider>
       </body>
