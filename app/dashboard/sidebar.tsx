@@ -54,13 +54,13 @@ export function AppSidebar({ user }: { user: User | null }) {
   const pathname = usePathname();
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarHeader className="p-4">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-[30px] h-[30px] rounded-full border-[5px] border-brand flex items-center justify-center">
+          <div className="w-[30px] h-[30px] shrink-0 rounded-full border-[5px] border-brand flex items-center justify-center">
             <div className="w-[5px] h-[5px] bg-brand rounded-full"></div>
           </div>
-          <span className="font-bold text-lg tracking-tight text-foreground">
+          <span className="font-bold text-lg tracking-tight text-foreground group-data-[collapsible=icon]:hidden">
             IG Studio
           </span>
         </Link>
@@ -92,10 +92,10 @@ export function AppSidebar({ user }: { user: User | null }) {
       <SidebarFooter className="p-4 border-t border-sidebar-border">
         {user && (
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-brand font-semibold text-sm">
+            <div className="w-8 h-8 shrink-0 rounded-full bg-brand/10 flex items-center justify-center text-brand font-semibold text-sm">
               {user.name?.charAt(0)?.toUpperCase() ?? "U"}
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
               <p className="text-sm font-medium text-foreground truncate">
                 {user.name}
               </p>

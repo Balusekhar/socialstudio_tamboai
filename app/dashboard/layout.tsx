@@ -2,14 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { getUser, logout } from "@/app/lib/auth";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Loader2, LogOut } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 
 interface User {
   name: string;
@@ -59,15 +57,6 @@ export default function DashboardLayout({
         {/* Top Navbar */}
         <header className="flex h-14 shrink-0 items-center border-b border-border px-4 gap-2">
           <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-[26px] h-[26px] rounded-full border-4 border-brand flex items-center justify-center">
-              <div className="w-[4px] h-[4px] bg-brand rounded-full"></div>
-            </div>
-            <span className="font-bold text-sm tracking-tight text-foreground">
-              IG Studio
-            </span>
-          </Link>
 
           <div className="ml-auto flex items-center gap-3">
             <span className="text-sm text-muted-foreground hidden sm:inline">

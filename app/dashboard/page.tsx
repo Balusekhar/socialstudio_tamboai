@@ -5,7 +5,6 @@ import {
   Video,
   Subtitles,
   ImageIcon,
-  AlignLeft,
   Loader2,
   ArrowRight,
   ExternalLink,
@@ -73,13 +72,6 @@ export default function DashboardPage() {
       icon: ImageIcon,
       href: "/dashboard/thumbnail",
       description: "Custom thumbnails for your reels",
-    },
-    {
-      title: "Metadata Entries",
-      count: 0,
-      icon: AlignLeft,
-      href: "/dashboard/metadata",
-      description: "Descriptions & hashtags generated",
     },
   ]);
 
