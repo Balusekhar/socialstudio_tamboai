@@ -1,9 +1,11 @@
-import { Client, Account, ID } from "appwrite";
+import { Client, Account, Databases, TablesDB, ID } from "appwrite";
 
 const client = new Client()
-    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!) // Your API Endpoint
-    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!);                 // Your project ID
+  .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
+  .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!);
 
 const account = new Account(client);
+const databases = new Databases(client);
+const tablesDB = new TablesDB(client);
 
-export { account, client, ID };
+export { account, databases, tablesDB, client, ID };
