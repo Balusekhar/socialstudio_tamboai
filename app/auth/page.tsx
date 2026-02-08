@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
@@ -87,15 +88,28 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2 mb-8">
-        <div className="w-[34px] h-[34px] rounded-full border-[6px] border-brand flex items-center justify-center">
-          <div className="w-[6px] h-[6px] bg-brand rounded-full"></div>
-        </div>
-        <span className="font-bold text-[22px] tracking-tight text-foreground">
-          Social Studio
-        </span>
-      </Link>
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="mb-8">
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-[34px] h-[34px] rounded-full border-[6px] border-brand flex items-center justify-center">
+              <div className="w-[6px] h-[6px] bg-brand rounded-full"></div>
+            </div>
+            <span className="font-bold text-[22px] tracking-tight text-foreground">
+              Social Studio
+            </span>
+          </Link>
+        </motion.div>
+      </motion.div>
 
+      <motion.div
+        className="w-full max-w-md"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, delay: 0.08, ease: "easeOut" }}>
       <Tabs
         value={activeTab}
         onValueChange={(v) => {
@@ -156,18 +170,20 @@ export default function AuthPage() {
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col gap-4">
-                <Button
-                  type="submit"
-                  className="w-full bg-brand hover:bg-brand/90 text-white gap-2"
-                  disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" /> Signing in...
-                    </>
-                  ) : (
-                    "Sign In"
-                  )}
-                </Button>
+                <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-brand hover:bg-brand/90 text-white gap-2"
+                    disabled={loading}>
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" /> Signing in...
+                      </>
+                    ) : (
+                      "Sign In"
+                    )}
+                  </Button>
+                </motion.div>
                 <p className="text-sm text-muted-foreground text-center">
                   Don&apos;t have an account?{" "}
                   <button
@@ -234,19 +250,21 @@ export default function AuthPage() {
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col gap-4">
-                <Button
-                  type="submit"
-                  className="w-full bg-brand hover:bg-brand/90 text-white gap-2"
-                  disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" /> Creating
-                      account...
-                    </>
-                  ) : (
-                    "Create Account"
-                  )}
-                </Button>
+                <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-brand hover:bg-brand/90 text-white gap-2"
+                    disabled={loading}>
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" /> Creating
+                        account...
+                      </>
+                    ) : (
+                      "Create Account"
+                    )}
+                  </Button>
+                </motion.div>
                 <p className="text-sm text-muted-foreground text-center">
                   Already have an account?{" "}
                   <button
@@ -261,10 +279,15 @@ export default function AuthPage() {
           </form>
         </TabsContent>
       </Tabs>
+      </motion.div>
 
-      <p className="mt-6 text-xs text-muted-foreground text-center max-w-sm">
+      <motion.p
+        className="mt-6 text-xs text-muted-foreground text-center max-w-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.25 }}>
         By continuing, you agree to our Terms of Service and Privacy Policy.
-      </p>
+      </motion.p>
     </div>
   );
 }

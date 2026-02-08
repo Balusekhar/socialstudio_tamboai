@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Upload,
   X,
@@ -15,7 +16,7 @@ import { addRow } from "@/app/lib/db";
 import { getUser, getErrorMessage } from "@/app/lib/auth";
 import { transcribeVideo } from "@/app/lib/whisper";
 
-const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500 MB
+const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
 
 export default function CaptionsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,7 +40,7 @@ export default function CaptionsPage() {
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      setError("File size exceeds 500 MB. Please choose a smaller file.");
+      setError("File size exceeds 25 MB. Please choose a smaller file.");
       return;
     }
 
@@ -139,7 +140,10 @@ export default function CaptionsPage() {
   };
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}>
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">
           Captions
@@ -160,17 +164,24 @@ export default function CaptionsPage() {
 
       {/* Success message */}
       {success && (
-        <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 rounded-xl p-4 mb-6 text-sm font-medium">
+        <motion.div
+          className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 rounded-xl p-4 mb-6 text-sm font-medium"
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}>
           <CheckCircle className="w-4 h-4 shrink-0" />
           Video uploaded and saved successfully!
-        </div>
+        </motion.div>
       )}
 
       {/* Upload Area */}
       {!selectedFile ? (
-        <div
+        <motion.div
           className="border-2 border-dashed border-border rounded-2xl p-12 flex flex-col items-center justify-center text-center mb-6 hover:border-brand/40 transition-colors cursor-pointer"
-          onClick={() => fileInputRef.current?.click()}>
+          onClick={() => fileInputRef.current?.click()}
+          whileHover={{ scale: 1.005 }}
+          whileTap={{ scale: 0.995 }}
+          transition={{ duration: 0.15 }}>
           <div className="w-14 h-14 bg-brand/10 rounded-xl flex items-center justify-center mb-4">
             <Upload className="w-7 h-7 text-brand" />
           </div>
@@ -179,20 +190,28 @@ export default function CaptionsPage() {
           </h3>
           <p className="text-sm text-muted-foreground mb-4 max-w-sm">
             Drag and drop your reel here, or click to browse. We support MP4,
-            MOV, and WebM formats (max 500 MB).
+            MOV, and WebM formats (max 25 MB).
           </p>
-          <Button
-            type="button"
-            className="bg-brand hover:bg-brand/90 text-white"
-            onClick={(e) => {
+          <motion.div
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               fileInputRef.current?.click();
-            }}>
-            Choose File
-          </Button>
-        </div>
+            }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}>
+            <Button
+              type="button"
+              className="bg-brand hover:bg-brand/90 text-white">
+              Choose File
+            </Button>
+          </motion.div>
+        </motion.div>
       ) : (
-        <div className="bg-card border border-border rounded-2xl p-5 mb-6 flex items-center gap-4">
+        <motion.div
+          className="bg-card border border-border rounded-2xl p-5 mb-6 flex items-center gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}>
           <div className="w-12 h-12 bg-brand/10 rounded-xl flex items-center justify-center shrink-0">
             <FileVideo className="w-6 h-6 text-brand" />
           </div>
@@ -204,15 +223,17 @@ export default function CaptionsPage() {
               {formatSize(selectedFile.size)}
             </p>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="shrink-0 text-muted-foreground hover:text-foreground"
-            onClick={removeFile}
-            disabled={loading}>
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="shrink-0 text-muted-foreground hover:text-foreground"
+              onClick={removeFile}
+              disabled={loading}>
+              <X className="w-4 h-4" />
+            </Button>
+          </motion.div>
+        </motion.div>
       )}
 
       {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
@@ -237,35 +258,44 @@ export default function CaptionsPage() {
       )}
 
       {/* Generate Button */}
-      <Button
-        className="bg-brand hover:bg-brand/90 text-white gap-2"
-        disabled={!selectedFile || loading}
-        onClick={handleGenerate}>
-        {loading ? (
-          <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            {step || "Processing..."}
-          </>
-        ) : (
-          <>
-            <Sparkles className="w-4 h-4" />
-            Generate
-          </>
-        )}
-      </Button>
+      <motion.div
+        whileHover={!selectedFile || loading ? {} : { scale: 1.02 }}
+        whileTap={!selectedFile || loading ? {} : { scale: 0.98 }}>
+        <Button
+          className="bg-brand hover:bg-brand/90 text-white gap-2"
+          disabled={!selectedFile || loading}
+          onClick={handleGenerate}>
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              {step || "Processing..."}
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4" />
+              Generate
+            </>
+          )}
+        </Button>
+      </motion.div>
 
       {/* SRT Output */}
       {srtContent && (
-        <div className="mt-8">
+        <motion.div
+          className="mt-8"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}>
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold text-foreground">
               Generated Captions (SRT)
             </h3>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-xs gap-1.5"
-              onClick={() => {
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs gap-1.5"
+                onClick={() => {
                 const blob = new Blob([srtContent], { type: "text/srt" });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
@@ -274,14 +304,15 @@ export default function CaptionsPage() {
                 a.click();
                 URL.revokeObjectURL(url);
               }}>
-              Download SRT
-            </Button>
+                Download SRT
+              </Button>
+            </motion.div>
           </div>
           <pre className="bg-muted border border-border rounded-xl p-4 text-sm text-foreground overflow-auto max-h-80 whitespace-pre-wrap">
             {srtContent}
           </pre>
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }

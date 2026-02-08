@@ -1,8 +1,16 @@
+"use client";
+
 import React from "react";
+import { motion } from "framer-motion";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-background py-12 border-t border-border">
+    <motion.footer
+      className="bg-background py-12 border-t border-border"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.3, ease: "easeOut" }}>
       <div className="max-w-[1440px] mx-auto px-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
           <div className="flex items-center gap-2">
@@ -56,7 +64,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 

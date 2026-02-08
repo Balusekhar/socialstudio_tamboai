@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { getUser, logout } from "@/app/lib/auth";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./sidebar";
@@ -87,36 +88,44 @@ export default function DashboardLayout({
               <ThemeToggle />
 
               {/* Tambo Chat Toggle */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setChatOpen(true)}
-                className="gap-1.5 sm:gap-2 min-h-[40px] sm:min-h-0 px-2.5 sm:px-3"
-              >
-                <img
-                  src="/tambo.png"
-                  alt="Tambo AI"
-                  className="w-4 h-4 rounded shrink-0"
-                />
-                <span className="hidden sm:inline">AI Chat</span>
-              </Button>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setChatOpen(true)}
+                  className="gap-1.5 sm:gap-2 min-h-[40px] sm:min-h-0 px-2.5 sm:px-3"
+                >
+                  <img
+                    src="/tambo.png"
+                    alt="Tambo AI"
+                    className="w-4 h-4 rounded shrink-0"
+                  />
+                  <span className="hidden sm:inline">AI Chat</span>
+                </Button>
+              </motion.div>
 
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleLogout}
-                className="gap-1.5 sm:gap-2 min-h-[40px] sm:min-h-0 px-2.5 sm:px-3"
-              >
-                <LogOut className="w-4 h-4 shrink-0" />
-                <span className="hidden sm:inline">Logout</span>
-              </Button>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="gap-1.5 sm:gap-2 min-h-[40px] sm:min-h-0 px-2.5 sm:px-3"
+                >
+                  <LogOut className="w-4 h-4 shrink-0" />
+                  <span className="hidden sm:inline">Logout</span>
+                </Button>
+              </motion.div>
             </div>
           </header>
 
           {/* Page Content - responsive padding */}
-          <main className="flex-1 p-4 sm:p-6 min-w-0 overflow-x-auto">
+          <motion.main
+            className="flex-1 p-4 sm:p-6 min-w-0 overflow-x-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}>
             {children}
-          </main>
+          </motion.main>
         </SidebarInset>
 
         {/* Tambo Chat Panel */}
