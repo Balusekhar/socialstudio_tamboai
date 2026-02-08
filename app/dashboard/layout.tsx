@@ -38,9 +38,18 @@ export default function DashboardLayout({
     const fetchUser = async () => {
       const result = await getUser();
       if (result.success && result.data) {
-        setUser(result.data as User);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setUserId((result.data as any).rows?.[0]?.$id ?? (result.data as any).$id ?? "");
+        const list = result.data as { rows?: { $id: string; name?: string; email?: string }[] };
+        const row = list.rows?.[0];
+        if (row) {
+          setUser({
+            $id: row.$id,
+            name: row.name ?? "",
+            email: row.email ?? "",
+          });
+          setUserId(row.$id);
+        } else {
+          router.push("/auth");
+        }
       } else {
         router.push("/auth");
       }
